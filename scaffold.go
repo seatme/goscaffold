@@ -97,6 +97,7 @@ type HTTPScaffold struct {
 	markdownHandler    MarkdownHandler
 	certFile           string
 	keyFile            string
+	handlers           map[string]func(w http.ResponseWriter, r *http.Request)
 }
 
 /*
@@ -110,6 +111,7 @@ func CreateHTTPScaffold() *HTTPScaffold {
 		managementPort: -1,
 		ipAddr:         []byte{0, 0, 0, 0},
 		open:           false,
+		handlers:       make(map[string]func(w http.ResponseWriter, r *http.Request)),
 	}
 }
 

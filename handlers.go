@@ -45,6 +45,10 @@ func (h *managementHandler) ServeHTTP(resp http.ResponseWriter, req *http.Reques
 	}
 }
 
+func (s *HTTPScaffold) AddManagementHandler(uri string, f func(w http.ResponseWriter, r *http.Request)) {
+	s.handlers[uri] = f
+}
+
 func (s *HTTPScaffold) createManagementHandler() *managementHandler {
 	h := &managementHandler{
 		s:   s,
@@ -68,6 +72,11 @@ func (s *HTTPScaffold) createManagementHandler() *managementHandler {
 	if s.markdownPath != "" {
 		h.mux.HandleFunc(s.markdownPath, s.handleMarkdown)
 	}
+
+	for uri, handler := range s.handlers {
+		h.mux.HandleFunc(uri, handler)
+	}
+
 	return h
 }
 
